@@ -9,6 +9,37 @@ class LoginForm(forms.Form):
     #max_length matches max_length for username field in pages/models.TIUser
     username = forms.CharField(label="username", max_length=150, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+class NameForm(forms.Form):
+    username = forms.CharField(label="username", max_length=150, widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    def delete(self):
+        if self.is_valid():
+            try:
+                user = TIUser.objects.get(username=self.cleaned_data['username'])
+                if user:
+                    user.isTI = False
+                    user.save()
+                    return True
+                else:
+                    print("Failed to save results after NameForm.delete()")
+                    return False
+            except Exception:
+                return False
+        return False
+
+    def add(self):
+        if self.is_valid():
+            try: 
+                user = TIUser.objects.get(username=self.cleaned_data['username'])
+                if user:
+                    user.isTI = True
+                    user.save()
+                    return True
+                else:
+                    print("Failed to save results after NameForm.add()")
+                    return False
+            except Exception:
+                return False
+        return False
 
 class SignupForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}))
@@ -74,7 +105,9 @@ class InspectionForm(ModelForm):
                 'noMajorLeaks', 'noMajorLeaksNotes',
                 'emptyTrunk', 'emptyTrunkNotes',
                 'functionalExhaust', 'functionalExhaustNotes',
-                'goodHelmet', 'isNoviceDriver'
+                'goodHelmet', 'isNoviceDriver',
+                'optionalExteriorPhoto',
+                'optionalInteriorPhoto', 'optionalHUTPhoto'
                 ]
         widgets = {
                 'goodBatteryandConnectionsNotes': TextInput(attrs={'placeholder': 'Notes'}),
@@ -96,10 +129,9 @@ class InspectionForm(ModelForm):
         self.fields['noMajorLeaksNotes'].required = False
         self.fields['emptyTrunkNotes'].required = False
         self.fields['functionalExhaustNotes'].required = False
-        #TODO Remove any undesireable entries(that already have up to date inspections)
-        #for entry in self.fields['UserVehicle'].queryset
-            #if entry.inspectionID
-            #somehow remove the value from the queryset
+        self.fields['optionalExteriorPhoto'].required = False
+        self.fields['optionalInteriorPhoto'].required = False
+        self.fields['optionalHUTPhoto'].required = False
     def create(self):
         try:
             if self.is_valid():

@@ -12,11 +12,10 @@
         <ul class="nav-bar">
 
           <!-- Centered link -->
-          <li class="nav-bar-item"><a href="/home/{{uuid}}/" >Home</a></li>
           <li class="nav-bar-item"><a href="/inspections/{{uuid}}/">Inspections</a></li>
           <li class="nav-bar-item"><a href="/waivers/{{uuid}}/">Waivers</a></li>
           <li class="nav-bar-item"><a href="/profile/{{uuid}}/" class="active">Profile</a></li>
-          <li class="nav-bar-item"><a href="/add_a_car/{{uuid}}/">Add a Car</a></li>
+          <li class="nav-bar-item"><a href="/add_a_car/{{uuid}}/">Add Car</a></li>
           <li class="nav-bar-item"><a href="/garage/{{uuid}}/">Your Cars</a></li>
         </ul>
 
@@ -34,6 +33,14 @@
               {{profile_form.last_name}}
 
               {% endif %}
+            </div>
+            <div class="div-lvl2">
+              <p class="div-head">Your Waivers</p>
+            {% if waiver_form %}
+              <p>Your waiver is vaild!</p>
+            {% else %} 
+              <p>You do not have a valid waiver!</p>
+            {% endif %}
             </div>
             <div class="div-lvl2">
               <p class="div-head">Change password</p>

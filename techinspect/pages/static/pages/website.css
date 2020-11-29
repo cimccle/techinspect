@@ -212,19 +212,20 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: left;
+    justify-content: space-evenly;
     height: fit-content;
     background-color:red;
 }
 
 .nav-bar-item a{
     flex-basis: auto;
-    width: fit-content;
+    width: 12.1vw;
     display: block;
     color: #000;
-    padding: 3vh 0vw;
+    padding: 3vh 2vw;
     text-decoration: none;
     text-align: center;
+    word-wrap: break-word;
     background-color: none
 }
 
@@ -255,6 +256,10 @@
     text-align: center;
     background-color: whitesmoke;
     padding: 20px
+}
+.waiver-form{
+    margin: 0%;
+    text-align: center;
 }
 
 
@@ -319,11 +324,15 @@ input[type=text]{
     display: flexbox;
     justify-content: space-evenly;
 }
+#id_waiverDate, #id_waiverName{
+
+    background-color: lightgray;
+}
 #waiver {
     max-width: 85%;
     text-align: left;
     border: 1px whitesmoke solid;
-
+    text-indent: 4em;
     border-radius:10px;
 
 }

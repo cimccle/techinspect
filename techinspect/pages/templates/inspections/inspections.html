@@ -8,18 +8,17 @@
     <body class="home-background">
       <h1 class="title">CHAMPAIGN COUNTY SPORTS CAR CLUB</h1>
         <ul class="nav-bar">
-          <li class="nav-bar-item"><a href="/home/{{uuid}}/">Home</a></li>
           <li class="nav-bar-item"><a href="/inspections/{{uuid}}/" class="active">Inspections</a></li>
           <li class="nav-bar-item"><a href="/waivers/{{uuid}}/">Waivers</a></li>
           <li class="nav-bar-item"><a href="/profile/{{uuid}}/">Profile</a></li>
-          <li class="nav-bar-item"><a href="/add_a_car/{{uuid}}/">Add a Car</a></li>
+          <li class="nav-bar-item"><a href="/add_a_car/{{uuid}}/">Add Car</a></li>
           <li class="nav-bar-item"><a href="/garage/{{uuid}}/">Your Cars</a></li>
         </ul>
           <div class="div-lvl1">
               <form method="POST">
                   {% csrf_token %}
             {% if inspection_form %}
-            <p class="title">
+            <p class="div-head">
               {{ inspection_form.inspectionID }} Inspection
             </p>
             <p> {{inspection_form.UserVehicle }} </p>
@@ -33,6 +32,7 @@
               <p class="inspect-item-text">{{ inspection_form.goodBreakPads }}        Brake pads/rotors in good condition</p>
               <p class="inspect-item-text">{{ inspection_form.noLooseBodyPanels }}        No loose body panels</p>
               <p class="inspect-item-text">{{ inspection_form.goodNumbers }}        Numbers on & clearly visible on body</p>
+              <p class="inspect-item-text">{{ inspection_form.optionalExteriorPhoto }}        Optional Exterior Photo</p>
             </div>
             <div class="div-lvl2" id="checkboxes">  
               <p class="div-head"> Interior </p>
@@ -43,6 +43,7 @@
               <p class="inspect-item-text">{{ inspection_form.goodSeat }} Seat in functional order</p>
               <p class="inspect-item-text">{{ inspection_form.goodSeatBelt }} Seat Belt proper for year of car and class</p>
               <p class="inspect-item-text">{{ inspection_form.goodMountedCamera }} Camera, phones, and other gear mounted to car</p>
+              <p class="inspect-item-text">{{ inspection_form.optionalInteriorPhoto }}        Optional Interior Photo</p>
             </div>  
             <div class="div-lvl2" id="checkboxes">
               <p class="div-head"> Under the Hood and Trunk </p>
@@ -51,8 +52,9 @@
               <p class=inspect-item-text id="contains-notes">{{ inspection_form.goodThrottleCable }} Throttle cable secure(if applicable) {{ inspection_form.goodThrottleCableNotes }} </p>
               <p class=inspect-item-text id="contains-notes">{{ inspection_form.goodFluidCaps }} All fluid caps secure {{ inspection_form.goodFluidCapsNotes }}</p>
               <p class=inspect-item-text id="contains-notes">{{ inspection_form.noMajorLeaks }}No major leaks apparent {{ inspection_form.noMajorLeaksNotes }}</p>
-              <p class=inspect-item-text id="contains-notes">{{ inspection_form.emptyTrunk }}Trunk is empty of items that move around {{ inspection_form.emptyTrunkNotes }}</p>
+              <p class=inspect-item-text id="contains-notes">{{ inspection_form.emptyTrunk }}Trunk is empty of movable items {{ inspection_form.emptyTrunkNotes }}</p>
               <p class=inspect-item-text id="contains-notes">{{ inspection_form.functionalExhaust }}Function exhaust system {{ inspection_form.functionalExhaustNotes }}</p>
+              <p class="inspect-item-text">{{ inspection_form.optionalHUTPhoto }}        Optional Hood & Trunk Photo</p>
             </div>
             <input type="submit" value="submit inspection" class="button">
               </form>

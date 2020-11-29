@@ -12,6 +12,7 @@ class TIUser(AbstractUser):
     VIN = models.ForeignKey('Vehicle', on_delete=models.CASCADE, null=True) #Have to link by name of class since it is created later on in file
     waiverID = models.ForeignKey('Waiver', on_delete=models.CASCADE, null=True) #same here
     image = models.ImageField(upload_to='images/', null=True)
+    isTI = models.BooleanField(default=False)
     def __str__(self):
         return self.username + " " + self.password #TODO remove this after project complete
 
@@ -62,6 +63,7 @@ class Inspection(models.Model):
     goodBreakPads = models.BooleanField(default=False)
     noLooseBodyPanels = models.BooleanField(default=False)
     goodNumbers = models.BooleanField(default=False)
+    optionalExteriorPhoto = models.ImageField(upload_to='images/', null=True)
 
     #Interior checks
     goodFloorMats = models.BooleanField(default=False)
@@ -71,6 +73,7 @@ class Inspection(models.Model):
     goodSeat = models.BooleanField(default=False)
     goodSeatBelt = models.BooleanField(default=False)
     goodMountedCamera = models.BooleanField(default=False)
+    optionalInteriorPhoto = models.ImageField(upload_to='images/', null=True)
 
     #Under the Hood and Trunk
     goodBatteryandConnections = models.BooleanField(default=False)
@@ -87,9 +90,10 @@ class Inspection(models.Model):
     emptyTrunkNotes = models.CharField(max_length=100, default="") 
     functionalExhaust = models.BooleanField(default=False)
     functionalExhaustNotes = models.CharField(max_length=100, default="") 
-     
+    optionalHUTPhoto = models.ImageField(upload_to='images/', null=True)
     #helmet
     goodHelmet = models.BooleanField(default=False)
+    optionalHelmetPhoto = models.ImageField(upload_to='images/', null=True)
     
     #Novice driver
     isNoviceDriver = models.BooleanField(default=False)
@@ -99,7 +103,7 @@ class Waiver(models.Model):
     #TODO: Is defining an ID here necessary or should we just use the one provided by Django?
     waiverID = models.AutoField(primary_key=True) 
     waiverDate = models.DateField(default=date.today) 
-    waiverName = models.CharField(max_length=100) 
+    waiverName = models.CharField(default="Full name", max_length=100) 
     UUID = models.ForeignKey(TIUser, on_delete=DO_NOTHING) 
 
 class Image(models.Model):

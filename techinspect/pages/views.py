@@ -15,7 +15,7 @@ def login_render(request):
             #IMPORTANT: TO ACCESS FORM DATA ALWAYS USE cleaned_data['name of field']
             try:
                 if utils.login(form.cleaned_data['username'], form.cleaned_data['password']):
-                    return HttpResponseRedirect('home/' + utils.find_user_uuid(form.cleaned_data['username']) + '/') 
+                    return HttpResponseRedirect('garage/' + utils.find_user_uuid(form.cleaned_data['username']) + '/') 
                 
                 else:
                     messages.error(request, "Login failed due to incorrect username/password")
@@ -26,8 +26,6 @@ def login_render(request):
     return render(request, 'login/index.html', {'form': form})
 
 
-def homepage_render(request, uuid):
-    return render(request, 'home/index.html', {'uuid': uuid})
 
 def profile_render(request, uuid):
     if request.method == 'POST':
@@ -66,7 +64,15 @@ def inspection_render(request, uuid):
 def garage_render(request, uuid):
     cars = Vehicle.objects.filter(UUID=utils.get_user(uuid))
     today = datetime.date.today()
-    return render(request, 'cars/garage.html', {'garage_cars': cars, 'uuid': uuid, 'today': today})
+    yearDiffs = []
+    for i in range(0, len(cars)):
+        if(cars[i].inspectionID):
+            yearDiffs.append(today.year - cars[i].inspectionID.inspectionDate.year)
+        else:
+            yearDiffs.append(5) #Basically just needs to be a number that fails the check
+       
+    myZips = zip(cars, yearDiffs)
+    return render(request, 'cars/garage.html', {'garage_cars': cars, 'myZips': myZips, 'uuid': uuid})
 
 def cars_render(request, uuid):
     if request.method == 'POST':
@@ -110,4 +116,43 @@ def signup_render(request):
         form = forms.SignupForm()
     return render(request, 'signup/index.html', {'form': form})
 
-    
+def manage_ti_render(request, uuid):
+    #Here we just supply the shit and defer aciton to mange_ti_delete and manage_ti_add
+    add_form = forms.NameForm()
+    delete_form = forms.NameForm()
+    return render(request, 'ti/index.html', {'add_form': add_form, 'delete_form': delete_form, 'uuid': uuid})
+
+def manage_ti_delete(request, uuid):
+    if request.method == 'POST':
+        delete_form = forms.NameForm(request.POST)
+        if not delete_form.is_valid():
+            if not delete_form.delete():
+                messages.error(request, "Username doesn't exist or the write failed otherwise.")
+            else:
+                messages.success(request, "Tech Inspector DELETED")
+    add_form = forms.NameForm()
+    delete_form = forms.NameForm()
+    return render(request, 'ti/index.html', {'add_form': add_form, 'delete_form': delete_form, 'uuid': uuid})
+
+def manage_ti_add(request, uuid):
+    if request.method == 'POST':
+        add_form = forms.NameForm(request.POST)
+        if add_form.is_valid():
+            if not add_form.add():
+                messages.error(request, "Username doesn't exist or the write failed otherwise.")
+            else:
+                messages.success(request, "Tech Inspector ADDED")
+
+    add_form = forms.NameForm()
+    delete_form = forms.NameForm()
+    return render(request, 'ti/index.html', {'add_form': add_form, 'delete_form': delete_form, 'uuid': uuid})
+
+
+
+
+
+
+
+
+
+
