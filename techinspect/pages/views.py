@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.utils.html import mark_safe
 from pages import forms
 from pages import utils
-from pages.models import Vehicle
+from pages.models import Vehicle, Inspection
 import datetime
 
 def login_render(request):
@@ -25,7 +25,8 @@ def login_render(request):
         form = forms.LoginForm()
     return render(request, 'login/index.html', {'form': form})
 
-
+def homepage_render(request, uuid):
+    return render(request, 'profile/profile.html', {'uuid': uuid})
 
 def profile_render(request, uuid):
     if request.method == 'POST':
@@ -49,11 +50,13 @@ def profile_render(request, uuid):
 
 def inspection_render(request, uuid):
     if request.method == 'POST':
-        form = forms.InspectionForm(uuid, request.POST)
+        form = forms.InspectionForm(request.POST)
+        form.set_queryset(uuid)
         if form.is_valid():
             print("Getting here")
             form.create()
-            form = forms.InspectionForm(uuid)
+            form = forms.InspectionForm()
+            form.set_queryset(uuid)
         else:
             print("Form failed for some reason")
     else:
@@ -147,12 +150,53 @@ def manage_ti_add(request, uuid):
     delete_form = forms.NameForm()
     return render(request, 'ti/index.html', {'add_form': add_form, 'delete_form': delete_form, 'uuid': uuid})
 
+def review_render(request, uuid):
+    #We're going to use the same delegation strategy to handle this stuff.
+    #Since this page really only asks for a name, that's all we include to start.
+    name_form = forms.NameForm()
+    return render(request, 'ti/review.html', {'name_form': name_form, 'uuid': uuid})
+
+def review_get_cars(request, uuid):
+    if request.method == 'POST':
+        name_form = forms.NameForm(request.POST)
+        if name_form.is_valid():
+            cars = name_form.get_cars()
+            if len(cars) == 0:
+                messages.error(request, "Search failed for cars for this user.")
+                return render(request, 'ti/review.html', {'name_form': name_form, 'uuid': uuid})
+            else:
+                vehicle_choice_form = forms.VehicleChoiceForm()
+                vehicle_choice_form.set_queryset(cars)
+        else:
+            messages.error(request, "Information sent was rejected by validation test.")
+
+    return render(request, 'ti/review.html', {'name_form': name_form, 'vehicle_choice_form': vehicle_choice_form, 'uuid': uuid})
 
 
 
+def review_get_inspection(request, uuid):
+    if request.method == 'POST':
+        vehicle_choice = forms.VehicleChoiceForm(request.POST)
+        if vehicle_choice.is_valid():
+            #Get the inspection and return it.
+            print(type(vehicle_choice.cleaned_data['UserVehicle']))
+            insp = vehicle_choice.cleaned_data['UserVehicle'].inspectionID
+            insp_fm = forms.InspectionForm(instance=insp)
+            insp_fm.set_UserVehicle(vehicle_choice.cleaned_data['UserVehicle'])
+            insp_fm.set_inspectionID(insp.inspectionID)
+            #define name_form, repass vehicle_choice, repass uuid, create inspection form
+            name_form = forms.NameForm()
+            name_form.fields['username'] = vehicle_choice.cleaned_data['UserVehicle'].UUID.username
 
+            return render(request, 'ti/review.html', {'name_form': name_form, 'vehicle_choice_form': vehicle_choice, 'inspection_form': insp_fm, 'uuid': uuid})
+        else:
+            name_form = forms.NameForm()
+            messages.error(request, "Information sent was rejected by validation test.")
+            return render(request, 'ti/review.html', {'name_form': name_form, 'uuid': uuid})
+    else:
+        name_form = forms.NameForm()
 
-
+    return render(request, 'ti/review.html', {'name_form': name_form, 'uuid': uuid})
 
 
 

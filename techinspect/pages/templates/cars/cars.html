@@ -16,14 +16,15 @@
           <li class="nav-bar-item"><a href="/profile/{{uuid}}/">Profile</a></li>
           <li class="nav-bar-item"><a href="/add_a_car/{{uuid}}/" class="active">Add Car</a></li>
           <li class="nav-bar-item"><a href="/garage/{{uuid}}/">Your Cars</a></li>
+          <li class="nav-bar-item"><a href="/manage_ti/{{uuid}}/">T.I.</a></li>
         </ul>
         <div class="div-lvl1">
           <div class="div-lvl2">
             <p class="div-head"> + Add a car </p>
-            <form enctype="multipart/form-data" method="POST">
+            <form enctype="multipart/form-data" method="POST" id="centered">
                 {% csrf_token %}
                 {% for field in vehicle_form %}
-                  <p> {{field}} </p>
+                  <p id="centered"> {{field}} </p>
                 {% endfor %}
                 <input type="submit" value="Submit" class="button-small">
             </form>

@@ -17,6 +17,13 @@
           <li class="nav-bar-item"><a href="/profile/{{uuid}}/" class="active">Profile</a></li>
           <li class="nav-bar-item"><a href="/add_a_car/{{uuid}}/">Add Car</a></li>
           <li class="nav-bar-item"><a href="/garage/{{uuid}}/">Your Cars</a></li>
+          <div class="dropdown">
+            <button class="button-dropdown">T.I.</button>  
+            <div class="dropdown-content">
+              <a href="/manage_ti/{{uuid}}/">Manage</a>
+              <a href="/reviews/{{uuid}}/">Reviews</a>
+            </div>
+          </div>
         </ul>
 
           <div class="div-lvl1">
@@ -24,25 +31,34 @@
               Profile
             </p>
             <div class="div-lvl2">
-              <p class="div-head">Your information</p>
+              <p class="div-head">Your Information</p>
               {% if profile_form %}
-              {% if profile_image %}<img src="{{ profile_image.url }}"/> {% endif %}
-              {{profile_form.username}}
-              {{profile_form.email}}
-              {{profile_form.first_name}}
-              {{profile_form.last_name}}
-
+              <table>
+                <tr>
+                  {% if profile_image %}
+                  
+                    <td><div id="div-profile-image"><img src="{{ profile_image.url }}" width="200px"/></div></td>
+                  {% endif %}
+                    <td>
+                      {{profile_form.username}}
+                      {{profile_form.email}}
+                      {{profile_form.first_name}}
+                      {{profile_form.last_name}}
+                    </td>
+                </tr>
+              </table>
               {% endif %}
+              
             </div>
-            <div class="div-lvl2">
+            <div class="div-lvl2" id="centered">
               <p class="div-head">Your Waivers</p>
             {% if waiver_form %}
-              <p>Your waiver is vaild!</p>
+              <p id="centered">Your waiver is vaild!</p>
             {% else %} 
               <p>You do not have a valid waiver!</p>
             {% endif %}
             </div>
-            <div class="div-lvl2">
+            <div class="div-lvl2" id="centered">
               <p class="div-head">Change password</p>
             <form method="POST">
             {% csrf_token %}
@@ -51,7 +67,8 @@
                 {{ field }}
                 {% endfor %}
             {% endif %}
-            <input type="submit" value="Change password" class="button">
+            <br>
+            <input type="submit" value="Change Password" class="button-small" >
             </form>
             </div>
            </div>

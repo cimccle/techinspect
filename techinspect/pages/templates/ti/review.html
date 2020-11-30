@@ -21,12 +21,36 @@
             </div>
           </div>
         </ul>
+        
           <div class="div-lvl1">
-              <form method="POST">
-                  {% csrf_token %}
+            <p class="div-head">Find Cars by Username</p>
+            <div class="div-lvl2" id="centered">
+              <ul class="messages">
+                {% for message in messages %}                                                                                                                                             
+                <p {% if message.tags %} class="{{ message.tags  }}"{% endif %}>{{ message  }}</p>
+                {% endfor %}
+              </ul>
+            
+            
+              {% if name_form %}
+              <form action="/get_cars/{{uuid}}/" method="POST">
+                    {% csrf_token %}
+                  {{ name_form.username }}
+                  <input type="submit" value="Search" class="button"> 
+              </form >
+              {% endif %}
+              {% if vehicle_choice_form %}
+              <form action="/select_car/{{uuid}}/" method="POST">
+                    {% csrf_token %}
+                {{ vehicle_choice_form.UserVehicle }} 
+                  <input type="submit" value="Find inspection" class="button"> 
+              </form>
+              {% endif %}
+            </div>
             {% if inspection_form %}
+            <form action="/submit_ti_insp/{{uuid}}/" method=POST>
             <p class="div-head">
-              {{ inspection_form.inspectionID }} Inspection
+              Inspection
             </p>
             <p> {{ inspection_form.UserVehicle }} </p>
             <div class="div-lvl2" id="checkboxes">
@@ -63,9 +87,9 @@
               <p class=inspect-item-text id="contains-notes">{{ inspection_form.functionalExhaust }}Function exhaust system {{ inspection_form.functionalExhaustNotes }}</p>
               <p class="inspect-item-text">{{ inspection_form.optionalHUTPhoto }}        Optional Hood & Trunk Photo</p>
             </div>
-            <input type="submit" value="Submit Inspection" class="button">
-              </form>
-              {% endif %}
+            <input type="submit" value="Submit Inspection(TI)" class="button">
+            </form>
+            {% endif %}
         </div>                                    
     </body>
   </html>

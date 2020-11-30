@@ -40,6 +40,13 @@ class NameForm(forms.Form):
             except Exception:
                 return False
         return False
+    def get_cars(self):
+        if self.is_valid():
+            try:
+                cars = Vehicle.objects.filter(UUID=TIUser.objects.get(username=self.cleaned_data['username']))
+                return cars
+            except Exception:
+                return []
 
 class SignupForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}))
@@ -90,8 +97,19 @@ class WaiverForm(ModelForm):
         except Exception:
             print("Failed to find user")
 
+class VehicleChoiceForm(ModelForm):
+    class Meta:
+        model = Inspection
+        fields = ['UserVehicle']
+    def set_queryset(self, queryset):
+        if not (len(queryset) == 0 or queryset is None):
+            self.fields['UserVehicle'].queryset = queryset
+
+
+    
 
 class InspectionForm(ModelForm):
+    inspectionID = forms.IntegerField()
     class Meta:
         model = Inspection
         fields = ['UserVehicle','noWheelPlay', 'goodWheels', 'goodHubCaps', 'goodTires',
@@ -118,10 +136,10 @@ class InspectionForm(ModelForm):
                 'emptyTrunkNotes': TextInput(attrs={'placeholder': 'Notes'}),
                 'functionalExhaustNotes': TextInput(attrs={'placeholder': 'Notes'}),
                 }
-    def __init__(self, uuid, *args, **kwargs):
+
+    def __init__(self, *args, **kwargs):
         super(InspectionForm, self).__init__(*args, **kwargs)
         #Must set the queryset(aka the list of values to be shown) for UserVehicle to the actual cars of the user
-        self.fields['UserVehicle'].queryset = Vehicle.objects.filter(UUID=utils.get_user(uuid))
         self.fields['goodBatteryandConnectionsNotes'].required = False
         self.fields['goodAirIntakeandSecureNotes'].required = False
         self.fields['goodThrottleCableNotes'].required = False
@@ -142,6 +160,17 @@ class InspectionForm(ModelForm):
         except Exception:
             print("Something didn't work in InspectionForm.create(); bad save?")
         return None
+    def set_queryset(self, uuid):
+        self.fields['UserVehicle'].queryset = Vehicle.objects.filter(UUID=utils.get_user(uuid))
+    def set_UserVehicle(self, vehicle):
+        self.fields['UserVehicle'] = vehicle
+        self.fields['UserVehicle'].queryset = Vehicle.objects.filter(VIN=self.fields['UserVehicle'].VIN)
+        print("Vehicle for insp_form is ")
+        print(self.fields['UserVehicle'])
+    def set_inspectionID(self, insp_id):
+        self.fields['inspectionID'] = insp_id        
+        print(self.fields['inspectionID'])
+
 
 class VehicleForm(ModelForm):
     class Meta:

@@ -7,16 +7,21 @@
     </head>
     <body class="home-background">
       <h1 class="title">CHAMPAIGN COUNTY SPORTS CAR CLUB</h1>
-        <!--img src = "{% static 'Banner.png'  %}" id = "banner"></img>
+        <!--img src = "{% static 'Banner.png'  %}" id = "banner"></img-->
         <!-- Top navigation -->
         <ul class="nav-bar">
-
-          <!-- Centered link -->
           <li class="nav-bar-item"><a href="/inspections/{{uuid}}/">Inspections</a></li>
           <li class="nav-bar-item"><a href="/waivers/{{uuid}}/" class="active">Waivers</a></li>
           <li class="nav-bar-item"><a href="/profile/{{uuid}}/">Profile</a></li>
           <li class="nav-bar-item"><a href="/add_a_car/{{uuid}}/">Add Car</a></li>
           <li class="nav-bar-item"><a href="/garage/{{uuid}}/">Your Cars</a></li>
+          <div class="dropdown">
+            <button class="button-dropdown">T.I.</button>  
+            <div class="dropdown-content">
+              <a href="/manage_ti/{{uuid}}/">Manage</a>
+              <a href="/reviews/{{uuid}}/">Reviews</a>
+            </div>
+          </div>
         </ul>
 
           <div class="div-lvl1" id="waiver">
@@ -80,7 +85,7 @@
 
                     {% endfor %}
                     
-                    <input type="submit" value="complete waiver" class="button">
+                    <input type="submit" value="Complete Waiver" class="button">
                 </form>
             <p class="bannerimg"></p>
            </div>

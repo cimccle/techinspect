@@ -98,6 +98,8 @@ class Inspection(models.Model):
     #Novice driver
     isNoviceDriver = models.BooleanField(default=False)
     Verified = models.BooleanField(default=False) #Only verified if an admin approves it/does the inspection 
+    def __str__(self):
+        return self.inspectionID
 
 class Waiver(models.Model): 
     #TODO: Is defining an ID here necessary or should we just use the one provided by Django?
